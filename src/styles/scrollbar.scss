@@ -1,0 +1,40 @@
+//Custom scrollbar
+// Importe este arquivo onde o componente da lista for utilizado.
+//
+// Exemplo:
+// import "../styles/scrollbar.scss";
+
+.scrollbar-custom {
+  scrollbar-width: thin;
+  scrollbar-color: #52525b transparent;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 8px 0;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #3f3f46;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+
+    &:hover {
+      background: #71717a;
+      border: 1px solid transparent;
+      background-clip: padding-box;
+    }
+
+    &:active {
+      background: #a1a1aa;
+    }
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}

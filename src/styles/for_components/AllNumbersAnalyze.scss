@@ -1,0 +1,95 @@
+ 
+.NumberDetailsOverlay{
+  width: 100% !important;
+  height: 96vh !important ;
+  background: rgba(255, 255, 255, 0.1);
+
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+}
+
+.all-info{
+  height: 96vh; // precisa ser vh
+  width: 100%;
+  background: linear-gradient(145deg, rgb(3, 23, 77), rgb(1, 0, 46), rgb(18, 0, 82), rgb(0, 14, 53));
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+ 
+.main-info{
+  width: 100% !important;
+
+}
+
+.limiter{
+  height: 100vh;
+}
+
+.ld{
+  flex: 2;
+}
+.le{
+  flex:1;
+}
+
+.triangles-info{
+  padding: 1rem;
+}
+ 
+ 
+ .for-flex{
+  display: flex;
+ }
+ 
+ .list{
+  width: 100vw;
+  height: 100%;
+
+ }
+
+ .okay-button{
+  padding: 3px;
+  margin: 0 0 2rem 2rem;
+ }
+ 
+ 
+ 
+ 
+ .main-info-container{
+
+  margin-top: 1rem;
+  background-color: rgba(aquamarine, .1);
+  padding: 5px;
+    .info{
+    
+    
+      border-radius: .25rem;
+      margin: 3px;
+      padding: 1px;
+    
+    
+      
+    }
+
+ }
+ 
+
+
+
+
+.ttitle{
+
+  color: whitesmoke !important;
+  padding: .2rem;
+  margin-bottom: .5rem;
+  background: linear-gradient(145deg, rgb(3, 23, 77), rgb(1, 0, 46), rgb(18, 0, 82), rgb(0, 14, 53));
+
+
+
+}
+

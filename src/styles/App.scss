@@ -1,0 +1,27 @@
+
+@use "./variables" as *;
+
+
+
+.titulo {
+  color: $primary;
+}
+
+
+
+#infinity-void{
+
+  background-color: rgb(2, 2, 88);
+  height: 100vh;
+  padding: 1px 4px;
+
+  #Content-Area{
+    // margin-top: 3.2rem;
+  
+  }
+
+}
+
+
+
+
