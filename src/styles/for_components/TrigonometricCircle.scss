@@ -1,0 +1,1126 @@
+.trigonometric-circle {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24px;
+  background: #0d1117;
+  color: #e6edf3;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+
+  /* ------------------------------------------------------------- */
+  /* HEADER                                                        */
+  /* ------------------------------------------------------------- */
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  &__title-group {
+    max-width: 520px;
+
+    h2 {
+      margin: 6px 0 4px;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 999px;
+    color: #38bdf8;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 8px #38bdf8;
+    }
+  }
+
+  &__subtitle {
+    margin: 0;
+    color: #8b949e;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  /* Seletor de Modo */
+  &__mode-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    background: rgba(22, 27, 34, 0.7);
+    padding: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+
+    .mode-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: #8b949e;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 160ms ease;
+
+      .icon {
+        font-size: 14px;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.04);
+        color: #f0f6fc;
+      }
+
+      &.active {
+        background: rgba(192, 132, 252, 0.14);
+        border-color: rgba(192, 132, 252, 0.35);
+        color: #e9d5ff;
+        box-shadow: 0 2px 8px rgba(192, 132, 252, 0.15);
+      }
+    }
+  }
+
+  /* Display de Ângulo */
+  &__angle-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 8px 16px;
+    background: rgba(22, 27, 34, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+
+    .angle-main {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+
+      .deg {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 22px;
+        font-weight: 700;
+        color: #f0f6fc;
+      }
+
+      .rad-frac {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 15px;
+        font-weight: 600;
+        color: #c084fc;
+      }
+    }
+
+    .angle-sub {
+      display: flex;
+      gap: 12px;
+      margin-top: 2px;
+      color: #8b949e;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+    }
+  }
+
+  /* ------------------------------------------------------------- */
+  /* BODY & GRID LAYOUT                                            */
+  /* ------------------------------------------------------------- */
+  &__body {
+    display: grid;
+    grid-template-columns: minmax(520px, 1fr) 390px;
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  /* ------------------------------------------------------------- */
+  /* VISUAL SVG CANVAS & CONTROLS                                  */
+  /* ------------------------------------------------------------- */
+  &__visual {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, #161b22 0%, #0d1117 75%, #06090e 100%);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+    padding: 16px;
+    overflow: hidden;
+  }
+
+  &__svg {
+    width: 100%;
+    max-width: 640px;
+    height: auto;
+    overflow: visible;
+    touch-action: none;
+    user-select: none;
+    cursor: crosshair;
+
+    /* Grid e Guias */
+    .grid-circle {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.05);
+      stroke-width: 1;
+
+      &.sub {
+        stroke: rgba(255, 255, 255, 0.025);
+        stroke-dasharray: 3 3;
+      }
+    }
+
+    .grid-ray {
+      stroke: rgba(255, 255, 255, 0.035);
+      stroke-width: 1;
+      stroke-dasharray: 2 4;
+    }
+
+    /* Eixos */
+    .axis-line {
+      stroke: #30363d;
+      stroke-width: 1.4;
+    }
+
+    .axis-tick {
+      fill: #8b949e;
+    }
+
+    .axis-label-unit {
+      fill: #8b949e;
+      font-size: 11px;
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 500;
+    }
+
+    /* Ticks notáveis */
+    .notable-tick {
+      stroke: #484f58;
+      stroke-width: 1.2;
+    }
+
+    .notable-text {
+      fill: #484f58;
+      font-size: 9px;
+      font-family: "JetBrains Mono", monospace;
+      text-anchor: middle;
+      dominant-baseline: central;
+      transition: fill 120ms ease;
+    }
+
+    .notable-group.current {
+      .notable-tick {
+        stroke: #c084fc;
+        stroke-width: 2.2;
+      }
+
+      .notable-text {
+        fill: #c084fc;
+        font-weight: bold;
+        font-size: 11px;
+      }
+    }
+
+    /* Círculo Unitário */
+    .unit-circle {
+      fill: rgba(255, 255, 255, 0.012);
+      stroke: rgba(255, 255, 255, 0.35);
+      stroke-width: 2;
+    }
+
+    /* Setor e Triângulo de Euler */
+    .sector-fill {
+      fill: url(#sector-grad);
+    }
+
+    .euler-triangle-fill {
+      fill: rgba(56, 189, 248, 0.06);
+      stroke: rgba(56, 189, 248, 0.25);
+      stroke-width: 1;
+      stroke-dasharray: 3 3;
+    }
+
+    .arc-path {
+      fill: none;
+      stroke: #fcd34d;
+      stroke-width: 3.2;
+      stroke-linecap: round;
+    }
+
+    .angle-inner-arc {
+      fill: none;
+      stroke: rgba(252, 211, 77, 0.4);
+      stroke-width: 1.5;
+    }
+
+    /* Raios e Projeções */
+    .radius-line {
+      stroke: rgba(255, 255, 255, 0.85);
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    .cosine-segment {
+      stroke: #60a5fa;
+      stroke-width: 3.5;
+      stroke-linecap: round;
+    }
+
+    .sine-segment {
+      stroke: #4ade80;
+      stroke-width: 3.5;
+      stroke-linecap: round;
+    }
+
+    .projection-dash {
+      stroke: rgba(255, 255, 255, 0.2);
+      stroke-width: 1;
+      stroke-dasharray: 4 4;
+    }
+
+    /* Corda Fundamental */
+    .chord-fundamental {
+      stroke: #c084fc;
+      stroke-width: 3.8;
+      stroke-linecap: round;
+    }
+
+    /* Apótema e Sagita */
+    .apothem-segment {
+      stroke: #38bdf8;
+      stroke-width: 2.8;
+      stroke-linecap: round;
+    }
+
+    .sagitta-segment {
+      stroke: #fb923c;
+      stroke-width: 3.2;
+      stroke-linecap: round;
+    }
+
+    .bisector-line {
+      stroke: rgba(255, 255, 255, 0.15);
+      stroke-width: 1;
+      stroke-dasharray: 3 3;
+    }
+
+    .midpoint-dot {
+      fill: #38bdf8;
+      stroke: #0d1117;
+      stroke-width: 2;
+    }
+
+    .midpoint-label {
+      fill: #38bdf8;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    /* Ponto inicial z0 */
+    .p0-dot {
+      fill: #ffffff;
+      stroke: #0d1117;
+      stroke-width: 2;
+    }
+
+    .p0-label {
+      fill: #8b949e;
+      font-size: 11px;
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 600;
+    }
+
+    /* Conjugado Complexo */
+    .conjugate-chord {
+      stroke: rgba(168, 85, 247, 0.4);
+      stroke-width: 1.5;
+      stroke-dasharray: 4 4;
+    }
+
+    .conjugate-point {
+      fill: #a855f7;
+      stroke: #0d1117;
+      stroke-width: 2;
+    }
+
+    .conjugate-label {
+      fill: #a855f7;
+      font-size: 10px;
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    /* Tangentes e Secantes */
+    .tangent-axis,
+    .cotangent-axis {
+      stroke: rgba(255, 255, 255, 0.12);
+      stroke-width: 1;
+      stroke-dasharray: 4 4;
+    }
+
+    .tangent-segment {
+      stroke: #f59e0b;
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    .cotangent-segment {
+      stroke: #f472b6;
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    .secant-ray {
+      stroke: rgba(255, 255, 255, 0.15);
+      stroke-width: 1;
+    }
+
+    .construction-dot {
+      fill: #f59e0b;
+      stroke: #0d1117;
+      stroke-width: 1.5;
+    }
+
+    /* Raízes da Unidade */
+    .roots-polygon {
+      fill: rgba(192, 132, 252, 0.05);
+      stroke: rgba(192, 132, 252, 0.45);
+      stroke-width: 1.8;
+    }
+
+    .root-chord-line {
+      stroke: rgba(192, 132, 252, 0.3);
+      stroke-width: 1.2;
+    }
+
+    .root-vertex {
+      fill: #c084fc;
+      stroke: #0d1117;
+      stroke-width: 2;
+
+      &.root-zero {
+        fill: #ffffff;
+      }
+    }
+
+    .root-label {
+      fill: #e6edf3;
+      font-size: 10px;
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 600;
+    }
+
+    /* De Moivre */
+    .demoivre-step-chord {
+      stroke: #38bdf8;
+      stroke-width: 1.6;
+    }
+
+    .demoivre-radius {
+      stroke: rgba(255, 255, 255, 0.08);
+      stroke-width: 1;
+    }
+
+    .demoivre-dot {
+      fill: #38bdf8;
+      stroke: #0d1117;
+      stroke-width: 2;
+
+      &.generator {
+        fill: #ffffff;
+      }
+    }
+
+    .demoivre-label {
+      fill: #8b949e;
+      font-size: 10px;
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    /* Ângulo Inscrito */
+    .inscribed-line {
+      stroke: #34d399;
+      stroke-width: 1.5;
+      stroke-dasharray: 4 4;
+    }
+
+    .inscribed-vertex {
+      fill: #34d399;
+      stroke: #0d1117;
+      stroke-width: 2;
+    }
+
+    .inscribed-label {
+      fill: #34d399;
+      font-size: 11px;
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    /* Origem e Handles Principais */
+    .origin-dot {
+      fill: #ffffff;
+    }
+
+    .origin-label {
+      fill: #6e7681;
+      font-size: 11px;
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .point-handle-halo {
+      fill: rgba(255, 255, 255, 0.08);
+      animation: pulse-halo 2.5s infinite ease-in-out;
+    }
+
+    .point-handle {
+      fill: #ffffff;
+      stroke: #0d1117;
+      stroke-width: 3;
+      cursor: grab;
+      transition: transform 120ms ease;
+
+      &:hover {
+        transform: scale(1.15);
+      }
+
+      &.p2 {
+        fill: #f43f5e;
+      }
+    }
+
+    .point-handle:active {
+      cursor: grabbing;
+    }
+
+    .point-handle-label {
+      fill: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: "JetBrains Mono", monospace;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    }
+  }
+
+  @keyframes pulse-halo {
+    0%,
+    100% {
+      r: 12px;
+      opacity: 0.4;
+    }
+    50% {
+      r: 18px;
+      opacity: 0.15;
+    }
+  }
+
+  /* Controles Flutuantes da Visualização */
+  &__floating-controls {
+    width: 100%;
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: rgba(22, 27, 34, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .control-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #21262d;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      color: #e6edf3;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 120ms ease;
+
+      &:hover {
+        background: #30363d;
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      &.playing {
+        background: rgba(239, 68, 68, 0.15);
+        border-color: rgba(239, 68, 68, 0.4);
+        color: #fca5a5;
+      }
+
+      &.snap-active {
+        background: rgba(56, 189, 248, 0.15);
+        border-color: rgba(56, 189, 248, 0.4);
+        color: #7dd3fc;
+      }
+    }
+
+    .speed-buttons {
+      display: flex;
+      gap: 4px;
+
+      .speed-btn {
+        padding: 4px 8px;
+        background: #161b22;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 4px;
+        color: #8b949e;
+        font-size: 11px;
+        font-family: "JetBrains Mono", monospace;
+        cursor: pointer;
+
+        &.active {
+          background: #38bdf8;
+          border-color: #38bdf8;
+          color: #0d1117;
+          font-weight: bold;
+        }
+      }
+    }
+
+    .slider-container {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #8b949e;
+
+        strong {
+          color: #f0f6fc;
+          font-family: "JetBrains Mono", monospace;
+        }
+      }
+
+      input[type="range"] {
+        width: 100%;
+        height: 5px;
+        background: #30363d;
+        border-radius: 4px;
+        appearance: none;
+        outline: none;
+        cursor: pointer;
+
+        &::-webkit-slider-thumb {
+          appearance: none;
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          background: #c084fc;
+          box-shadow: 0 0 6px rgba(192, 132, 252, 0.6);
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  /* ------------------------------------------------------------- */
+  /* PAINEL ANALÍTICO LATERAL                                      */
+  /* ------------------------------------------------------------- */
+  &__panel {
+    display: flex;
+    flex-direction: column;
+    background: #161b22;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 16px;
+    overflow: hidden;
+  }
+
+  /* Tabs */
+  .panel-tabs {
+    display: flex;
+    gap: 4px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    overflow-x: auto;
+
+    &::-webkit-scrollbar {
+      height: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #30363d;
+      border-radius: 2px;
+    }
+
+    button {
+      flex: 1;
+      white-space: nowrap;
+      padding: 7px 10px;
+      background: transparent;
+      border: 0;
+      border-radius: 8px;
+      color: #8b949e;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 140ms ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.04);
+        color: #e6edf3;
+      }
+
+      &.active {
+        background: #21262d;
+        color: #f0f6fc;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+
+  .tab-content {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow-y: auto;
+    max-height: 520px;
+    padding-right: 4px;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #30363d;
+      border-radius: 2px;
+    }
+  }
+
+  .section-title {
+    span {
+      display: block;
+      color: #8b949e;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+  }
+
+  /* Cartões de Métricas */
+  .metric-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .metric-card {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px;
+    background: #0d1117;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    transition: transform 120ms ease, border-color 120ms ease;
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-1px);
+    }
+
+    &.chord-highlight {
+      grid-column: span 2;
+      background: linear-gradient(135deg, rgba(192, 132, 252, 0.1) 0%, #0d1117 100%);
+      border-color: rgba(192, 132, 252, 0.3);
+
+      .metric-value {
+        font-size: 20px;
+        color: #e9d5ff;
+      }
+    }
+
+    .metric-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      .metric-name {
+        color: #8b949e;
+        font-size: 11px;
+        font-weight: 600;
+      }
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+
+      &.purple {
+        background: #c084fc;
+      }
+      &.sky {
+        background: #38bdf8;
+      }
+      &.orange {
+        background: #fb923c;
+      }
+      &.emerald {
+        background: #4ade80;
+      }
+      &.amber {
+        background: #f59e0b;
+      }
+      &.pink {
+        background: #f472b6;
+      }
+    }
+
+    .metric-value {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 15px;
+      color: #f0f6fc;
+    }
+
+    .metric-formula {
+      color: #6e7681;
+      font-size: 10px;
+      font-family: "JetBrains Mono", monospace;
+    }
+  }
+
+  .identity-banner {
+    padding: 12px;
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 10px;
+
+    .identity-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 4px;
+    }
+
+    code {
+      display: block;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      color: #e6edf3;
+      word-break: break-all;
+    }
+  }
+
+  /* Complex Tab */
+  .complex-formula-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: #0d1117;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+
+    .formula-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      &.highlight {
+        background: rgba(192, 132, 252, 0.08);
+        padding: 6px 8px;
+        border-radius: 6px;
+        border-bottom: 0;
+      }
+
+      .tag {
+        color: #8b949e;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        color: #e6edf3;
+      }
+    }
+  }
+
+  /* Trig Tab */
+  .values-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .value-box {
+    padding: 10px;
+    background: #0d1117;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .val-name {
+      color: #8b949e;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .val-number {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 15px;
+
+      &.emerald {
+        color: #4ade80;
+      }
+      &.cobalt {
+        color: #60a5fa;
+      }
+      &.amber {
+        color: #f59e0b;
+      }
+      &.pink {
+        color: #f472b6;
+      }
+      &.purple {
+        color: #c084fc;
+      }
+      &.red {
+        color: #f87171;
+      }
+    }
+
+    .val-detail {
+      color: #6e7681;
+      font-size: 9px;
+      font-family: "JetBrains Mono", monospace;
+    }
+  }
+
+  .quadrant-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: #0d1117;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    font-size: 12px;
+
+    span {
+      color: #8b949e;
+    }
+
+    strong {
+      color: #38bdf8;
+      font-family: "JetBrains Mono", monospace;
+    }
+  }
+
+  /* Theorems Tab */
+  .theorem-card {
+    padding: 12px;
+    background: #0d1117;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+
+    h4 {
+      margin: 0 0 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #f0f6fc;
+    }
+
+    p {
+      margin: 0 0 6px;
+      color: #8b949e;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    code {
+      display: block;
+      padding: 6px 8px;
+      background: #161b22;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      color: #c084fc;
+      margin-bottom: 6px;
+    }
+
+    .theorem-live-calc {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 6px;
+      padding: 6px 8px;
+      background: rgba(192, 132, 252, 0.08);
+      border-radius: 6px;
+
+      span {
+        font-size: 10px;
+        color: #8b949e;
+      }
+
+      strong {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        color: #e9d5ff;
+      }
+    }
+  }
+
+  /* Layers Tab */
+  .layers-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .layer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 8px 12px;
+    background: #0d1117;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    color: #6e7681;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 120ms ease;
+
+    .layer-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .layer-name {
+      flex: 1;
+      text-align: left;
+    }
+
+    .layer-check {
+      font-weight: bold;
+      color: #38bdf8;
+    }
+
+    &:hover {
+      background: #21262d;
+      color: #e6edf3;
+    }
+
+    &.active {
+      color: #f0f6fc;
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+  }
+}
+
+/* ------------------------------------------------------------- */
+/* RESPONSIVIDADE                                                */
+/* ------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .trigonometric-circle {
+    &__body {
+      grid-template-columns: 1fr;
+    }
+
+    &__panel {
+      max-height: none;
+    }
+
+    .tab-content {
+      max-height: 400px;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .trigonometric-circle {
+    padding: 16px;
+
+    &__header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    &__mode-selector {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    &__angle-card {
+      width: 100%;
+      align-items: flex-start;
+    }
+
+    &__body {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .metric-cards-grid,
+    .values-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .metric-card.chord-highlight {
+      grid-column: span 1;
+    }
+  }
+}

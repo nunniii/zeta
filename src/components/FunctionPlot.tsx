@@ -135,9 +135,6 @@ const [info, setInfo] = useState("");
     drawGrid(ctx,width,height,view);
     drawAxes(ctx,width,height,view);
 
-    const toX=(x:number)=>
-      ((x-view.xMin)/(view.xMax-view.xMin))*width;
-
     const toY=(y:number)=>
       ((view.yMax-y)/(view.yMax-view.yMin))*height;
 

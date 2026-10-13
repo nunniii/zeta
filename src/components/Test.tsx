@@ -155,7 +155,6 @@ function drawAxes(ctx: CanvasRenderingContext2D, W: number, H: number, vp: Viewp
   const rawStep = vp.scale * 80;                       // ~80px entre marcas
   const mag     = Math.pow(10, Math.floor(Math.log10(rawStep)));
   const step    = rawStep / mag < 2 ? mag : rawStep / mag < 5 ? 2 * mag : 5 * mag;
-  const pxStep  = step / vp.scale;                     // pixels entre marcas
 
   ctx.save();
 

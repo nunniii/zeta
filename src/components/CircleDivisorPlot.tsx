@@ -53,10 +53,6 @@ function getIntegerPoints(r2: number): [number, number][] {
   return points;
 }
 
-function formatEquation(r2: number): string {
-  return `x² + y² = ${r2}`;
-}
-
 export function CircleDivisorPlot({
   n,
 }: CircleDivisorPlotProps) {

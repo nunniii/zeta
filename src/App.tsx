@@ -8,12 +8,10 @@ import { Nav } from './components/_global/Nav';
 
 
 function App() {
-  const [count, setCount] = useState(0)
-
   // Para gerenciar o estado do componente selecionado
-    const [selectedComponent, setSelectedComponent] = useState<
-        'Progress' | 'Gamma' | 'Riemann'
-      >('Progress')
+  const [selectedComponent, setSelectedComponent] = useState<
+    'Progress' | 'Gamma' | 'Riemann' | 'Prime'
+  >('Progress')
 
   return (
     <>

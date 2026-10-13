@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -7,8 +6,6 @@ type CircleData = {
   a: number;
   b: number;
   r2: number;
-  radius: number;
-  d: number;
 };
 
 type CircleDivisorAtomProps = {
@@ -27,9 +24,7 @@ function getParesDivisores(n: number): [number, number][] {
   return pares;
 }
 
-
-
-const simplifySqrt = (n: number) => {
+function simplifySqrt(n: number) {
   if (n === 0) {
     return {
       coefficient: 0,
@@ -54,9 +49,9 @@ const simplifySqrt = (n: number) => {
     coefficient,
     radicand,
   };
-};
+}
 
-const formatSqrt = (n: number) => {
+function formatSqrt(n: number) {
   const { coefficient, radicand } = simplifySqrt(n);
 
   if (radicand === 1) {
@@ -68,30 +63,33 @@ const formatSqrt = (n: number) => {
   }
 
   return `${coefficient}√${radicand}`;
-};
+}
 
+function formatSqrtMultiple(multiplier: number, n: number) {
+  const { coefficient, radicand } = simplifySqrt(n);
+  const value = multiplier * coefficient;
 
+  if (radicand === 1) {
+    return `${value}`;
+  }
+
+  if (value === 1) {
+    return `√${radicand}`;
+  }
+
+  return `${value}√${radicand}`;
+}
 
 function getCircles(n: number): CircleData[] {
-  return getParesDivisores(n).map(([a, b]) => {
-    
-    const r2 = a * a + b * b;
-    const raio = Math.sqrt(r2)
-    const diametro = 2 * raio;
-
-    return {
-      a,
-      b,
-      r2,
-      radius: raio,
-      d: diametro
-    };
-  });
+  return getParesDivisores(n).map(([a, b]) => ({
+    a,
+    b,
+    r2: a * a + b * b,
+  }));
 }
 
 function getIntegerPoints(r2: number): [number, number][] {
   const points: [number, number][] = [];
-
   const limit = Math.floor(Math.sqrt(r2));
 
   for (let x = -limit; x <= limit; x++) {
@@ -113,7 +111,6 @@ const COLORS = [
   0x566700,
 ];
 
-
 export function CircleDivisorAtom({
   n,
 }: CircleDivisorAtomProps) {
@@ -134,23 +131,22 @@ export function CircleDivisorAtom({
     // =========================================================
 
     const scene = new THREE.Scene();
-
     scene.background = new THREE.Color(0x000422);
 
     // =========================================================
     // CAMERA
     // =========================================================
 
+    const maxRadius = Math.max(
+      ...circles.map((circle) => Math.sqrt(circle.r2)),
+      1
+    );
+
     const camera = new THREE.PerspectiveCamera(
       45,
       container.clientWidth / container.clientHeight,
       0.1,
       1000
-    );
-
-    const maxRadius = Math.max(
-      ...circles.map((circle) => circle.radius),
-      1
     );
 
     camera.position.set(
@@ -192,7 +188,6 @@ export function CircleDivisorAtom({
 
     controls.enableDamping = true;
     controls.dampingFactor = 0.06;
-
     controls.minDistance = 2;
     controls.maxDistance = maxRadius * 10;
 
@@ -201,47 +196,41 @@ export function CircleDivisorAtom({
     // =========================================================
 
     const atomGroup = new THREE.Group();
-
     scene.add(atomGroup);
 
     // =========================================================
-    // GEOMETRIA DAS ESFERAS
+    // ESFERAS
     // =========================================================
 
-    const sphereGeometry =
-      new THREE.SphereGeometry(
-        Math.max(maxRadius * 0.010, 0.06),
-        20,
-        20
-      );
+    const sphereGeometry = new THREE.SphereGeometry(
+      Math.max(maxRadius * 0.010, 0.06),
+      20,
+      20
+    );
 
     // =========================================================
-    // CRIA AS ARGOLAS
+    // CÍRCULOS
     // =========================================================
 
     circles.forEach((circle, index) => {
-      const arcColor =
-        COLORS[index % COLORS.length];
-
+      const radius = Math.sqrt(circle.r2);
+      const arcColor = COLORS[index % COLORS.length];
       const pointColor = 0xffffff;
 
-
       // -------------------------------------------------------
-      // ARGOLA — apenas uma linha
+      // ARGOLA
       // -------------------------------------------------------
 
       const segments = 256;
-
       const circlePoints: THREE.Vector3[] = [];
 
       for (let i = 0; i < segments; i++) {
-        const theta =
-          (i / segments) * Math.PI * 2;
+        const theta = (i / segments) * Math.PI * 2;
 
         circlePoints.push(
           new THREE.Vector3(
-            circle.radius * Math.cos(theta),
-            circle.radius * Math.sin(theta),
+            radius * Math.cos(theta),
+            radius * Math.sin(theta),
             0
           )
         );
@@ -259,14 +248,13 @@ export function CircleDivisorAtom({
           opacity: 0.9,
         });
 
-      const torus =
-        new THREE.LineLoop(
-          circleGeometry,
-          circleMaterial
-        );
+      const torus = new THREE.LineLoop(
+        circleGeometry,
+        circleMaterial
+      );
 
       // -------------------------------------------------------
-      // INCLINAÇÃO DA ARGOLA
+      // INCLINAÇÃO
       // -------------------------------------------------------
 
       const angle = index * 1.1;
@@ -297,26 +285,22 @@ export function CircleDivisorAtom({
 
       integerPoints.forEach(([x, y]) => {
         /*
-         * Posição matemática no círculo original:
+         * Posição matemática original:
          *
          * x² + y² = r²
          */
 
-        const point =
-          new THREE.Vector3(
-            x,
-            y,
-            0
-          );
+        const point = new THREE.Vector3(
+          x,
+          y,
+          0
+        );
 
         /*
-         * Aplica exatamente a mesma rotação
-         * utilizada pela argola.
+         * Aplica a mesma rotação da argola.
          */
 
-        point.applyEuler(
-          torus.rotation
-        );
+        point.applyEuler(torus.rotation);
 
         // -----------------------------------------------------
         // ESFERA
@@ -331,14 +315,12 @@ export function CircleDivisorAtom({
             metalness: 0.1,
           });
 
-        const sphere =
-          new THREE.Mesh(
-            sphereGeometry,
-            sphereMaterial
-          );
+        const sphere = new THREE.Mesh(
+          sphereGeometry,
+          sphereMaterial
+        );
 
         sphere.position.copy(point);
-
         atomGroup.add(sphere);
       });
     });
@@ -361,14 +343,12 @@ export function CircleDivisorAtom({
         emissiveIntensity: 1.5,
       });
 
-    const nucleus =
-      new THREE.Mesh(
-        nucleusGeometry,
-        nucleusMaterial
-      );
+    const nucleus = new THREE.Mesh(
+      nucleusGeometry,
+      nucleusMaterial
+    );
 
     nucleus.position.set(0, 0, 0);
-
     atomGroup.add(nucleus);
 
     // =========================================================
@@ -376,21 +356,15 @@ export function CircleDivisorAtom({
     // =========================================================
 
     function handleResize() {
-      const width =
-        container.clientWidth;
+      if (!container) return;
 
-      const height =
-        container.clientHeight;
+      const width = container.clientWidth;
+      const height = container.clientHeight;
 
-      camera.aspect =
-        width / height;
-
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
 
-      renderer.setSize(
-        width,
-        height
-      );
+      renderer.setSize(width, height);
     }
 
     window.addEventListener(
@@ -406,9 +380,7 @@ export function CircleDivisorAtom({
 
     function animate() {
       animationId =
-        requestAnimationFrame(
-          animate
-        );
+        requestAnimationFrame(animate);
 
       controls.update();
 
@@ -425,9 +397,7 @@ export function CircleDivisorAtom({
     // =========================================================
 
     return () => {
-      cancelAnimationFrame(
-        animationId
-      );
+      cancelAnimationFrame(animationId);
 
       window.removeEventListener(
         "resize",
@@ -443,14 +413,9 @@ export function CircleDivisorAtom({
         ) {
           object.geometry.dispose();
 
-          if (
-            Array.isArray(
-              object.material
-            )
-          ) {
+          if (Array.isArray(object.material)) {
             object.material.forEach(
-              (material) =>
-                material.dispose()
+              (material) => material.dispose()
             );
           } else {
             object.material.dispose();
@@ -473,73 +438,66 @@ export function CircleDivisorAtom({
   }, [circles]);
 
   return (
-  <div className="mb-3">
+    <div className="mb-3">
 
-    <div className="flex items-center justify-between mb-3">
-      <p className="text-zinc-400 text-sm">
-        Modelo tridimensional das circunferências
-      </p>
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-zinc-400 text-sm">
+          Modelo tridimensional das circunferências
+        </p>
 
-      <span className="text-zinc-500 text-xs">
-        n = {n}
-      </span>
-    </div>
+        <span className="text-zinc-500 text-xs">
+          n = {n}
+        </span>
+      </div>
 
-    <div
-      ref={containerRef}
-      className="w-full h-100 rounded-lg overflow-hidden select-none bg-[#000422]"
-    />
+      <div
+        ref={containerRef}
+        className="w-full h-100 rounded-lg overflow-hidden select-none bg-[#000422]"
+      />
 
-    <div className="mt-4 space-y-2">
+      <div className="mt-4 space-y-2">
 
-      {circles.map((circle, index) => (
-        <div
-          key={`${circle.r2}-${index}`}
-          className="flex items-center gap-4 text-sm"
-        >
-
-          {/* Indicador da cor */}
+        {circles.map((circle, index) => (
           <div
-            className="w-3 h-3 rounded-full shrink-0"
-            style={{
-              backgroundColor:
-                `#${COLORS[
-                  index % COLORS.length
-                ]
-                  .toString(16)
-                  .padStart(6, "0")}`,
-            }}
-          />
+            key={`${circle.r2}-${index}`}
+            className="flex items-center gap-5 text-sm"
+          >
 
-         {/* Área */}
-<span className="text-zinc-300 font-mono">
-  A={circle.r2}π
-</span>
+            {/* Cor */}
+            <div
+              className="w-3 h-3 rounded-full shrink-0"
+              style={{
+                backgroundColor:
+                  `#${COLORS[index % COLORS.length]
+                    .toString(16)
+                    .padStart(6, "0")}`,
+              }}
+            />
 
-{/* Circunferência */}
-<span className="text-zinc-300 font-mono">
-  C={circle.r2 === 0
-    ? "0"
-    : `2${formatSqrt(circle.r2)}π`}
-</span>
+            {/* Raio */}
+            <span className="text-zinc-300 font-mono">
+              r={formatSqrt(circle.r2)}
+            </span>
 
-{/* Raio */}
-<span className="text-zinc-300 font-mono">
-  r={formatSqrt(circle.r2)}
-</span>
+            {/* Diâmetro */}
+            <span className="text-zinc-300 font-mono">
+              d={formatSqrtMultiple(2, circle.r2)}
+            </span>
 
-{/* Diâmetro */}
-<span className="text-zinc-300 font-mono">
-  d={circle.r2 === 0
-    ? "0"
-    : `*${formatSqrt(circle.d)}`}
-</span>
+            {/* Circunferência */}
+            <span className="text-zinc-300 font-mono">
+              C={formatSqrtMultiple(2, circle.r2)}π
+            </span>
 
-        </div>
-      ))}
+            {/* Área */}
+            <span className="text-zinc-300 font-mono">
+              A={circle.r2}π
+            </span>
 
+          </div>
+        ))}
+
+      </div>
     </div>
-  </div>
-);
+  );
 }
-

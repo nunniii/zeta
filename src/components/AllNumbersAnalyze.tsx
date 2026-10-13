@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../styles/for_components/AllNumbersAnalyze.scss";
 
-import { getDivisores, getParesDivisores } from "./Divisor";
+import { getDivisores } from "./Divisor";
 import { NumberDetailsOverlay } from "./NumberDetailsOverlay";
 
 import "../styles/scrollbar.scss";
